@@ -8,20 +8,22 @@
 <h3 th:text="${person.getPersonName()}">Value</h3>
 <p th:text="'Year of birth: ' + ${person.getYearOfBirth()}">Value</p>
 
-<div th:if="${not #lists.isEmpty(person.getBookList())}" >
+<div th:if="${!books.isEmpty()}">
     <h4>Books:</h4>
-    <p th:each="book : ${person.getBookList()}" th:text="${book.getBookTitle() + ', ' + book.getBookAuthor() + ', ' + book.getBookPublicationYear()}">user</p>
+    <div th:each="book : ${books}">
+        <a th:href="@{/books/{id}(id=${book.getBookId()})}" th:text="${book.getBookTitle() + ', ' + book.getBookAuthor() + ', ' + book.getBookPublicationYear()}">user</p></a>
+    </div>
 </div>
 
-<div th:if="${#lists.isEmpty(person.getBookList())}">
-    <p>This visitor doesn` have any books yet</p>
+<div th:if="${books.isEmpty()}">
+    <p>This visitor doesn't have any books yet</p>
 </div>
-
-
 
 
 <hr>
-<a th:href="@{/people/{id}/edit(id=${person.getPersonId()})}"><input type="button"  value="Edit"/></a>
+<a th:href="@{/people/{id}/edit(id=${person.getPersonId()})}">
+    <input type="button" value="Edit"/>
+</a>
 <br>
 <br>
 <form th:method="DELETE" th:action="@{/people/{id}/(id=${person.getPersonId()})}">

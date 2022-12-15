@@ -16,7 +16,7 @@ public class Book {
     @Size(min = 2, max = 150, message = "Book author should be from 2 to 200 symbols long")
     private String bookAuthor;
 
-    //    @Digits(integer=4, fraction=0, message = "Publication year should be digits")
+    @Min(value=1500, message = "Publication year should be greater than 1500")
     private int bookPublicationYear;
 
 

@@ -16,8 +16,6 @@ public class Person {
     @Min(value = 1900, message = "Year should be greater than 1900")
     private int yearOfBirth;
 
-    List<Book> bookList = new ArrayList<>();
-
     public Person() {
     }
 
@@ -51,12 +49,5 @@ public class Person {
         this.yearOfBirth = yearOfBirth;
     }
 
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
-    }
 
 }

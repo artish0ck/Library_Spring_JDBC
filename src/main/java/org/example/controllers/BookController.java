@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import org.example.dao.BookDao;
+import org.example.dao.PersonDao;
 import org.example.models.Book;
 import org.example.models.Person;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,11 @@ import javax.validation.Valid;
 @RequestMapping("books")
 public class BookController {
     public final BookDao bookDao;
+    public final PersonDao personDao;
 
-    public BookController(BookDao bookDao) {
+    public BookController(BookDao bookDao, PersonDao personDao) {
         this.bookDao = bookDao;
+        this.personDao = personDao;
     }
 
     @GetMapping()
@@ -29,7 +32,7 @@ public class BookController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", bookDao.show(id));
-        model.addAttribute("people", bookDao.indexPeople());
+        model.addAttribute("people", personDao.index());
         model.addAttribute("holder", bookDao.showHolder(id));
         return "book/show";
     }
@@ -62,21 +65,21 @@ public class BookController {
         return "redirect:/books";
     }
 
-    @PostMapping("/{id}")
-    public String release(@PathVariable("id") int bookId) {
-        bookDao.release(bookId);
-        return "redirect:/books/"+bookId;
-    }
-
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         bookDao.delete(id);
         return "redirect:/books";
     }
 
-    @PatchMapping("/{id}/add")
+    @PatchMapping("/{id}/release")
+    public String release(@PathVariable("id") int bookId) {
+        bookDao.release(bookId);
+        return "redirect:/books/" + bookId;
+    }
+
+    @PatchMapping("/{id}/assign")
     public String assign(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
-        bookDao.addHolder(person.getPersonId(), id);
+        bookDao.assign(person, id);
         return "redirect:/books/" + id;
     }
 

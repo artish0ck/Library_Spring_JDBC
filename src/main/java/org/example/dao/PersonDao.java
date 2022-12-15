@@ -7,7 +7,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PersonDao {
@@ -28,12 +30,18 @@ public class PersonDao {
 
     }
 
+    public Optional<Person> showByName(String personName) {
+        return jdbcTemplate.query("SELECT * FROM Person WHERE person_name=?", new BeanPropertyRowMapper<>(Person.class), personName)
+                .stream().findAny();
+    }
+
     public Person show(int id) {
-        Person person = jdbcTemplate.query("SELECT * FROM Person WHERE person_id=?", new BeanPropertyRowMapper<>(Person.class), id)
+        return jdbcTemplate.query("SELECT * FROM Person WHERE person_id=?", new BeanPropertyRowMapper<>(Person.class), id)
                 .stream().findAny().orElse(null);
-        person.setBookList(jdbcTemplate.query("SELECT * FROM Book LEFT JOIN Person p on book.holder_id = p.person_id WHERE holder_id=?",
-                new BeanPropertyRowMapper<>(Book.class), id));
-        return person;
+    }
+
+    public List<Book> getBooksById(int personId) {
+        return jdbcTemplate.query("SELECT * FROM Book  WHERE holder_id=?", new BeanPropertyRowMapper<>(Book.class), personId);
     }
 
     public void update(int id, Person updatedPerson) {
