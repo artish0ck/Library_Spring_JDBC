@@ -16,10 +16,7 @@ public class Person {
     @Min(value = 1900, message = "Year should be greater than 1900")
     private int yearOfBirth;
 
-    static List<Book> bookList;
-    static {
-        bookList = new ArrayList<>();
-        bookList.add(new Book());}
+    List<Book> bookList = new ArrayList<>();
 
     public Person() {
     }

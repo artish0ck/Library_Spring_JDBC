@@ -76,7 +76,6 @@ public class BookController {
 
     @PatchMapping("/{id}/add")
     public String assign(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
-        System.out.println(person.getPersonId() + " " + id);
         bookDao.addHolder(person.getPersonId(), id);
         return "redirect:/books/" + id;
     }

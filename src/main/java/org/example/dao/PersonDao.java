@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import org.example.models.Book;
 import org.example.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -28,8 +29,11 @@ public class PersonDao {
     }
 
     public Person show(int id) {
-        return jdbcTemplate.query("SELECT * FROM Person WHERE person_id=?", new BeanPropertyRowMapper<>(Person.class), id)
+        Person person = jdbcTemplate.query("SELECT * FROM Person WHERE person_id=?", new BeanPropertyRowMapper<>(Person.class), id)
                 .stream().findAny().orElse(null);
+        person.setBookList(jdbcTemplate.query("SELECT * FROM Book LEFT JOIN Person p on book.holder_id = p.person_id WHERE holder_id=?",
+                new BeanPropertyRowMapper<>(Book.class), id));
+        return person;
     }
 
     public void update(int id, Person updatedPerson) {
@@ -40,4 +44,5 @@ public class PersonDao {
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM Person WHERE person_id=?", id);
     }
+
 }
